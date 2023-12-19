@@ -1,4 +1,4 @@
-CREATE DATABASE GAGARAGE;
+CREATE DATABASE GAGARAGE2;
 
 CREATE TABLE PAYS (
 	Nom VARCHAR(50) PRIMARY KEY,
@@ -17,7 +17,7 @@ CREATE TABLE ADRESSE(
 	Num VARCHAR(10),
 	Ville VARCHAR(50),
 	FOREIGN KEY (Ville) REFERENCES VILLE(Nom)); 
-
+--30 personnes minimum
 CREATE TABLE PERSONNE (
 	Id INT PRIMARY KEY,
 	Nom VARCHAR(50),
@@ -27,7 +27,7 @@ CREATE TABLE PERSONNE (
 	Mail VARCHAR(50),
 	FOREIGN KEY (Adresse) REFERENCES ADRESSE(Id));
 
-
+--3 types d'accès différents 1:directeur 2:livreur 3:garagiste
 CREATE TABLE ACCES(
 	Id INT PRIMARY KEY,
 	Niveau VARCHAR(50));
@@ -36,7 +36,7 @@ CREATE TABLE GARAGE(
 	Id INT PRIMARY KEY,
 	Adresse INT,
 	FOREIGN KEY (Adresse) REFERENCES ADRESSE(Id));
-
+--15 employé minimum
 CREATE TABLE EMPLOYE(
 	NumEmpl INT PRIMARY KEY,
 	Personne INT, 
@@ -48,7 +48,7 @@ CREATE TABLE EMPLOYE(
 	Garage INT,
 	FOREIGN KEY (Garage) REFERENCES GARAGE(Id),
 	FOREIGN KEY (Personne) REFERENCES PERSONNE(Id));
-
+--Minimum 20 et au moi autant de camionette que de livreur (chaque camionnette est relié à un livreur)
 CREATE TABLE VEHICULE(
 	Plaque VARCHAR(7) PRIMARY KEY,
 	NumChassis INT,
@@ -62,7 +62,7 @@ CREATE TABLE FOURNISSEUR(
 	Acces INT,
 	FOREIGN KEY (Adresse) REFERENCES ADRESSE(Id),
 	FOREIGN KEY (Acces) REFERENCES ACCES(Id));
-
+--minimum 20
 CREATE TABLE PIECE(
 	Ref INT PRIMARY KEY,
 	Quantite INT,
@@ -102,110 +102,114 @@ CREATE TABLE LIVRAISON(
 	FOREIGN KEY (Piece) REFERENCES PIECE(Ref),
 	FOREIGN KEY (GARAGE) REFERENCES GARAGE(Id),
 	FOREIGN KEY (Livreur) REFERENCES EMPLOYE(NumEmpl));
--- Insert into ACCES table (3 levels: Livreur, Directeur, and Garagiste)
-INSERT INTO ACCES (Id, Niveau) VALUES
-(4, 'Livreur'),
-(5, 'Directeur'),
-(6, 'Garagiste');
+-- Insert data into PAYS table
+INSERT INTO PAYS (Nom, Capitale) VALUES
+('France', 'Paris'),
+('USA', 'Washington, D.C.'),
+('Germany', 'Berlin'),
+('Japan', 'Tokyo');
 
--- Insert into PERSONNE table (30 people)
+-- Insert data into VILLE table
+INSERT INTO VILLE (Nom, Code_Postal, Pays) VALUES
+('Paris', 75000, 'France'),
+('New York', 10001, 'USA'),
+('Berlin', 10115, 'Germany'),
+('Tokyo', 100-0001, 'Japan');
+
+-- Insert data into ADRESSE table
+INSERT INTO ADRESSE (Id, Rue, Num, Ville) VALUES
+(1, 'Rue de la Paix', '12', 'Paris'),
+(2, 'Broadway', '123', 'New York'),
+(3, 'Unter den Linden', '45', 'Berlin'),
+(4, 'Ginza', '6-10-1', 'Tokyo');
+
+-- Insert data into PERSONNE table
 INSERT INTO PERSONNE (Id, Nom, Prenom, Adresse, Tel, Mail) VALUES
-(1, 'Dupont', 'Pierre', 1, '1234567890', 'pierre.dupont@example.com'),
-(2, 'Schmidt', 'Anna', 2, '9876543210', 'anna.schmidt@example.com'),
-(3, 'Johnson', 'John', 3, '5551234567', 'john.johnson@example.com'),
-(4, 'Martin', 'Sophie', 1, '5554443333', 'sophie.martin@example.com'),
-(5, 'Garcia', 'Carlos', 2, '1112223333', 'carlos.garcia@example.com'),
-(6, 'Wang', 'Li', 3, '9998887777', 'li.wang@example.com'),
-(7, 'Smith', 'Emily', 1, '3335557777', 'emily.smith@example.com'),
-(8, 'Müller', 'Andreas', 2, '7778889999', 'andreas.muller@example.com'),
-(9, 'Lopez', 'Maria', 3, '2221114444', 'maria.lopez@example.com'),
-(10, 'Johnson', 'Olivia', 1, '6667778888', 'olivia.johnson@example.com'),
-(11, 'Kim', 'Joon', 2, '3336669999', 'joon.kim@example.com'),
-(12, 'Dubois', 'Claire', 3, '4445556666', 'claire.dubois@example.com'),
-(13, 'Gupta', 'Raj', 1, '8887776666', 'raj.gupta@example.com'),
-(14, 'Fernández', 'Juan', 2, '1114445555', 'juan.fernandez@example.com'),
-(15, 'Chen', 'Yun', 3, '2223334444', 'yun.chen@example.com'),
-(16, 'Lee', 'Seung', 1, '4443332222', 'seung.lee@example.com'),
-(17, 'Moreno', 'Luis', 2, '6669991111', 'luis.moreno@example.com'),
-(18, 'Sato', 'Yuki', 3, '5554448888', 'yuki.sato@example.com'),
-(19, 'González', 'Ana', 1, '7778881111', 'ana.gonzalez@example.com'),
-(20, 'Wu', 'Wei', 2, '8881114444', 'wei.wu@example.com'),
-(21, 'Brown', 'Emma', 3, '9992225555', 'emma.brown@example.com'),
-(22, 'Kumar', 'Amit', 1, '3332225555', 'amit.kumar@example.com'),
-(23, 'Nguyen', 'Linh', 2, '5551117777', 'linh.nguyen@example.com'),
-(24, 'Cohen', 'David', 3, '2223331111', 'david.cohen@example.com'),
-(25, 'Gomes', 'Marta', 1, '4445556666', 'marta.gomes@example.com'),
-(26, 'Nakamura', 'Takashi', 2, '9998887777', 'takashi.nakamura@example.com'),
-(27, 'Liu', 'Xin', 3, '6665554444', 'xin.liu@example.com'),
-(28, 'Abe', 'Hiroshi', 1, '1112223333', 'hiroshi.abe@example.com'),
-(29, 'Taylor', 'Sophia', 2, '5553337777', 'sophia.taylor@example.com'),
-(30, 'Choi', 'Min', 3, '7779991111', 'min.choi@example.com');
+(1, 'Dupont', 'Jean', 1, '1234567890', 'jean.dupont@email.com'),
+(2, 'Smith', 'John', 2, '9876543210', 'john.smith@email.com'),
+(3, 'Müller', 'Anna', 3, '5551234567', 'anna.muller@email.com'),
+(4, 'Tanaka', 'Hiroshi', 4, '9998887777', 'hiroshi.tanaka@email.com'),
+(5, 'Lefevre', 'Sophie', 2, '1112223333', 'sophie.lefevre@email.com'),
+(6, 'Brown', 'Emma', 3, '4445556666', 'emma.brown@email.com'),
+(7, 'Schmidt', 'Michael', 4, '7778889999', 'michael.schmidt@email.com'),
+(8, 'Yamamoto', 'Yuki', 1, '3334445555', 'yuki.yamamoto@email.com'),
+(9, 'Garcia', 'Carlos', 3, '1231231234', 'carlos.garcia@email.com'),
+(10, 'Wang', 'Lin', 4, '5675675678', 'lin.wang@email.com'),
+(11, 'Kim', 'Min-Jae', 1, '9998887777', 'minjae.kim@email.com'),
+(12, 'Moreno', 'Isabella', 2, '1112223333', 'isabella.moreno@email.com'),
+(13, 'Chen', 'Wei', 3, '5556667777', 'wei.chen@email.com'),
+(14, 'Martinez', 'Luisa', 4, '9990001111', 'luisa.martinez@email.com'),
+(15, 'Nguyen', 'Anh', 1, '3334445555', 'anh.nguyen@email.com'),
+(16, 'Gomez', 'Maria', 2, '7778889999', 'maria.gomez@email.com'),
+(17, 'Lee', 'Jin-Ho', 3, '1112223333', 'jin.ho.lee@email.com'),
+(18, 'Rodriguez', 'Carmen', 4, '5556667777', 'carmen.rodriguez@email.com'),
+(19, 'Liu', 'Wei', 1, '9998887777', 'wei.liu@email.com'),
+(20, 'Martinez', 'Alejandro', 2, '1112223333', 'alejandro.martinez@email.com'),
+(21, 'Choi', 'Yeon-Ju', 3, '5556667777', 'yeonju.choi@email.com'),
+(22, 'Fernandez', 'Luis', 4, '8887776666', 'luis.fernandez@email.com'),
+(23, 'Wu', 'Li', 1, '3334445555', 'li.wu@email.com'),
+(24, 'Hernandez', 'Gabriela', 2, '7778889999', 'gabriela.hernandez@email.com'),
+(25, 'Park', 'Joon-Ho', 3, '1112223333', 'joonho.park@email.com'),
+(26, 'Garcia', 'Lucia', 4, '5556667777', 'lucia.garcia@email.com');
 
--- Insert into GARAGE table
+-- Insert data into ACCES table
+INSERT INTO ACCES (Id, Niveau) VALUES
+(1, 'directeur'),
+(2, 'livreur'),
+(3, 'garagiste');
+
+-- Insert data into GARAGE table
 INSERT INTO GARAGE (Id, Adresse) VALUES
 (1, 1),
-(2, 2),
-(3, 3);
+(2, 3);
 
--- Insert into EMPLOYE table (15 employees with Livreur, Directeur, and Garagiste roles)
+-- Insert data into EMPLOYE table
 INSERT INTO EMPLOYE (NumEmpl, Personne, Job, DateArrive, DateSortie, NumCompte, Acces, Garage) VALUES
-(101, 1, 'Garagiste', '2022-01-01', NULL, 'ABC123', 6, 1),
-(102, 2, 'Livreur', '2022-01-15', NULL, 'XYZ789', 4, 2),
-(103, 3, 'Directeur', '2022-02-01', NULL, 'DEF456', 5, 3),
-(104, 4, 'Livreur', '2022-02-15', NULL, 'GHI789', 4, 1),
-(105, 5, 'Garagiste', '2022-03-01', NULL, 'JKL123', 6, 2),
-(106, 6, 'Directeur', '2022-03-15', NULL, 'MNO456', 5, 3),
-(107, 7, 'Livreur', '2022-04-01', NULL, 'PQR789', 4, 1),
-(108, 8, 'Garagiste', '2022-04-15', NULL, 'STU123', 6, 2),
-(109, 9, 'Directeur', '2022-05-01', NULL, 'VWX456', 5, 3),
-(110, 10, 'Livreur', '2022-05-15', NULL, 'YZA789', 4, 1),
-(111, 11, 'Garagiste', '2022-06-01', NULL, 'BCD123', 6, 2),
-(112, 12, 'Directeur', '2022-06-15', NULL, 'EFG456', 5, 3),
-(113, 13, 'Livreur', '2022-07-01', NULL, 'HIJ789', 4, 1),
-(114, 14, 'Garagiste', '2022-07-15', NULL, 'KLM123', 6, 2),
-(115, 15, 'Directeur', '2022-08-01', NULL, 'NOP456', 5, 3);
+(1, 1, 'Directeur', '2022-01-01', NULL, '123-456-789', 1, 1),
+(2, 2, 'Livreur', '2022-02-15', NULL, '987-654-321', 2, 2),
+(3, 3, 'Garagiste', '2022-03-10', NULL, '555-666-777', 3, 2),
+(4, 4, 'Garagiste', '2022-04-05', NULL, '111-222-333', 3, 1),
+(5, 5, 'Livreur', '2022-05-10', NULL, '444-555-666', 2, 1),
+(6, 6, 'Garagiste', '2022-06-15', NULL, '777-888-999', 3, 2),
+(7, 7, 'Directeur', '2022-07-20', NULL, '111-222-333', 1, 2),
+(8, 8, 'Garagiste', '2022-08-25', NULL, '444-555-666', 3, 2);
 
+-- Insert data into VEHICULE table
 INSERT INTO VEHICULE (Plaque, NumChassis, Typevoiture, Proprietaire) VALUES
-('ABC1234', 123456, 'Sedan', 1),
-('XYZ5678', 654321, 'SUV', 2),
-('DEF9012', 789012, 'Hatchback', 3),
-('JKL4567', 987654, 'Sedan', 6),
-('MNO8901', 123789, 'SUV', 7),
-('PQR2345', 456321, 'Hatchback', 8),
-('STU6789', 789012, 'Truck', 9),
-('VWX1234', 234567, 'Convertible', 10),
-('YZA5678', 876543, 'Motorcycle', 11),
-('BCD9012', 345678, 'Sedan', 12),
-('EFG3456', 567890, 'Van', 13),
-('HIJ7890', 678901, 'Coupe', 14),
-('KLM2345', 789012, 'SUV', 15);
+('ABC1234', 123456, 'Sedan', 2),
+('XYZ9876', 654321, 'Truck', 3),
+('DEF5678', 987654, 'SUV', 3),
+('GHI9012', 123789, 'Truck', 4),
+('JKL3456', 456321, 'Hatchback', 5),
+('MNO7890', 789654, 'Van', 6),
+('PQR1234', 654321, 'Convertible', 7),
+('STU5678', 123456, 'Sedan', 8),
+('VWX9012', 789012, 'Truck', 9),
+('YZA3456', 987012, 'SUV', 10),
+('BCD6789', 654789, 'Hatchback', 11),
+('EFG0123', 321456, 'Van', 12);
 
--- Insert into FOURNISSEUR table
+-- Insert data into FOURNISSEUR table
 INSERT INTO FOURNISSEUR (Nom, Adresse, Acces) VALUES
-('Supplier1', 1, 1),
-('Supplier2', 2, 2),
-('Supplier3', 3, 3);
+('AutoParts Co.', 1, 3),
+('TechSupplies Ltd.', 2, 1);
 
--- Insert into PIECE table
+-- Insert data into PIECE table
 INSERT INTO PIECE (Ref, Quantite, Prix, Fournisseur, stockage, Typepiece) VALUES
-(1, 100, 10.99, 'Supplier1', 1, 'Engine'),
-(2, 50, 5.99, 'Supplier2', 2, 'Tire'),
-(3, 200, 2.49, 'Supplier3', 3, 'Oil');
+(101, 50, 25.99, 'AutoParts Co.', 1, 'Engine'),
+(102, 30, 15.50, 'TechSupplies Ltd.', 2, 'Brake Pad');
 
--- Insert into INTERVENTION table
+-- Insert data into INTERVENTION table
 INSERT INTO INTERVENTION (Id, Vehicule, Prix, Datee, Duree, Statu) VALUES
-(1, 'ABC1234', 100.00, '2022-03-01', '01:30:00', 1),
-(2, 'XYZ5678', 75.50, '2022-03-02', '01:00:00', 0),
-(3, 'DEF9012', 120.75, '2022-03-03', '02:15:00', 1);
+(1, 'ABC1234', 100.00, '2023-01-15', '02:30:00', 1),
+(2, 'XYZ9876', 150.50, '2023-02-20', '03:15:00', 0);
 
--- Insert into FACTURE table
+-- Insert data into FACTURE table
 INSERT INTO FACTURE (Num_fact, Personne, Piece, Intervention, Statu) VALUES
-(1, 1, 1, 1, 1),
-(2, 2, 2, 2, 0),
-(3, 3, 3, 3, 1);
+(1, 1, 101, 1, 1),
+(2, 2, 102, 2, 0);
 
--- Insert into LIVRAISON table
+-- Insert data into LIVRAISON table
 INSERT INTO LIVRAISON (Id, Piece, Garage, Livreur, Statu) VALUES
-(1, 1, 1, 101, 1),
-(2, 2, 2, 102, 0),
-(3, 3, 3, 103, 1);
+(1, 101, 1, 2, 1),
+(2, 102, 2, 2, 0);
