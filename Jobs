@@ -15,3 +15,65 @@ BACKUP MASTER KEY TO FILE = 'D:\GAGARAGE\MasterKeyBackup'
 BACKUP CERTIFICATE MyCertEncrypt TO FILE = 'D:\GAGARAGE\CertificatBackup'
    WITH PRIVATE KEY (FILE = 'D:\GAGARAGE\PrivateKeyBackup', 
                      ENCRYPTION BY PASSWORD = 'MageratMagermans');
+
+
+
+Maintenance des stocks de pièces : 
+Database : GAGARAGE
+Tous les jours de la semaine
+
+SELECT Ref, Quantite FROM PIECE WHERE Quantite < 10;
+
+
+Suivi de la taille de la base de données :
+Database : master
+Tous les mois
+
+
+A exécuter avant : 
+
+use master
+CREATE TABLE TailleDBHistorique (
+    DateMesure DATETIME,
+    TailleMo INT
+);
+
+
+CREATE PROCEDURE EnregistrerTailleDB
+AS
+BEGIN
+    DECLARE @TailleMo INT;
+
+    -- Obtenez la taille actuelle de la base de données en mégaoctets
+    SELECT @TailleMo = size * 8 / 1024
+    FROM sys.master_files
+    WHERE database_id = DB_ID('GAGARAGE') AND file_id = 1; -- Assurez-vous d'ajuster le file_id si nécessaire
+
+    -- Enregistrez la date actuelle et la taille dans la table de suivi
+    INSERT INTO TailleDBHistorique (DateMesure, TailleMo)
+    VALUES (GETDATE(), @TailleMo);
+END;
+
+EXECUTE [EnregistrerTailleDB]
+Select * from TailleDBHistorique;
+
+à mettre dans la step :
+Database : master
+EXECUTE [EnregistrerTailleDB]
+Select * from TailleDBHistorique
+
+Suivi des factures impayées
+Database : GAGARAGE 
+Tous les lundis
+
+SELECT Num_fact, Personne, Statu FROM FACTURE WHERE Statu = 0;
+
+
+Suppression Automatique des Interventions non cloturées
+Database : GAGARAGE
+Tous les dimanches
+
+DELETE FROM INTERVENTION
+WHERE Statu = 0 -- Statut non clôturé
+AND DATEDIFF(DAY, Datee, GETDATE()) > 30;
+
