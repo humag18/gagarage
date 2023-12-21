@@ -1,0 +1,17 @@
+Job de chiffrement :
+Database : master
+Tous les dimanches
+
+
+CREATE MASTER KEY ENCRYPTION BY PASSWORD = 'MageratMagermans';
+
+
+CREATE CERTIFICATE MyCertEncrypt
+   WITH SUBJECT = 'Certificat de chiffrement pour la sauvegarde automatique';
+
+BACKUP MASTER KEY TO FILE = 'D:\GAGARAGE\MasterKeyBackup'
+   ENCRYPTION BY PASSWORD = 'MageratMagermans';
+
+BACKUP CERTIFICATE MyCertEncrypt TO FILE = 'D:\GAGARAGE\CertificatBackup'
+   WITH PRIVATE KEY (FILE = 'D:\GAGARAGE\PrivateKeyBackup', 
+                     ENCRYPTION BY PASSWORD = 'MageratMagermans');
